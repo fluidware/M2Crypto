@@ -8,7 +8,6 @@
 #include <openssl/rsa.h>
 #include <openssl/ssl.h>
 #include <openssl/x509.h>
-#include <ceval.h>
 
 /* Blob interface. Deprecated. */
 
@@ -132,7 +131,7 @@ int ssl_verify_callback(int ok, X509_STORE_CTX *ctx) {
     
         _x509_store_ctx_swigptr = SWIG_NewPointerObj((void *)ctx, SWIGTYPE_p_X509_STORE_CTX, 0);
         _x509_store_ctx_obj = Py_BuildValue("(Oi)", _x509_store_ctx_swigptr, 0);
-        _x509_store_ctx_inst = PyInstance_New(_klass, _x509_store_ctx_obj, NULL);
+        _x509_store_ctx_inst = PyEval_CallObject(_klass, _x509_store_ctx_obj);
         argv = Py_BuildValue("(iO)", ok, _x509_store_ctx_inst);
     } else {
         if (PyErr_Warn(PyExc_DeprecationWarning, "Old style callback, use cb_func(ok, store) instead")) {
